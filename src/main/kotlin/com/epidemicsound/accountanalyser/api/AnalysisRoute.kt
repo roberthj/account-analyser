@@ -8,7 +8,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 
 fun Application.analysisRoutes(
-    analysisService: AnalysisService = AnalysisService(),
+    analysisService: AnalysisService,
 ) {
     routing {
         post("/api/v1/analyse") {

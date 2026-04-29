@@ -9,23 +9,17 @@ class AnalysisService(
     private val chiSquareTest: ChiSquareTest = ChiSquareTest(),
 ) {
 
+    companion object {
+        private val DEFAULT_KEYWORDS = listOf("amount")
+    }
+
     /**
      * Run a Benford's-law check on `text` at the given significance level.
      *
      * `amountKeywords` selects which labelled values to extract — null or an
      * empty list falls back to [DEFAULT_KEYWORDS]. (Future work: when keywords
      * are absent, fall back to extracting all numbers.)
-     *
-     * @throws IllegalArgumentException if `significanceLevel` is outside (0, 1),
-     *   any keyword is blank, or no amounts can be extracted from `text`. All
-     *   mapped to HTTP 400 by the StatusPages handler in
-     *   [com.epidemicsound.accountanalyser.module].
      */
-
-    companion object {
-        private val DEFAULT_KEYWORDS = listOf("amount")
-    }
-
     fun analyse(
         text: String,
         expectedSignificanceLevel: Double,
@@ -42,8 +36,6 @@ class AnalysisService(
         require(digits.isNotEmpty()) { "No amounts found in input text" }
 
         val sampleSize = digits.size
-
-        // Count by digit
         val observedCounts: Map<Int, Int> = digits.groupingBy { it }.eachCount()
 
         //Format for ChiSquareTest
