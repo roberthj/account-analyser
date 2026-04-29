@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class AnalysisRequest(
     val text: String,
     val significanceLevel: Double,
-    /** Keywords that label the amounts to extract. Null/empty falls back to a default. */
+    // Keywords that label the amounts to extract. Null/empty falls back to a default
     val amountKeywords: List<String>? = null,
 )
 
@@ -20,8 +20,8 @@ data class DigitDistribution(
 @Serializable
 data class AnalysisResponse(
     val sampleSize: Int,
-    val significanceLevel: Double,
-    val pValue: Double,
+    val expectedSignificanceLevel: Double,
+    val observedSignificanceLevel: Double,
     val followsBenfordsLaw: Boolean,
     val distribution: List<DigitDistribution>,
 )

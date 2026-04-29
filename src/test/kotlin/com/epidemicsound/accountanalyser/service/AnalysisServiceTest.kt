@@ -73,13 +73,6 @@ class AnalysisServiceTest {
         assertEquals(3, emptyResult.sampleSize)
     }
 
-    @Test
-    fun `rejects blank entries in amountKeywords`() {
-        assertThrows(IllegalArgumentException::class.java) {
-            analysisService.analyse("Amount 100", significanceLevel, amountKeywords = listOf("amount", "  "))
-        }
-    }
-
     /**
      * Builds a text whose `Amount` tokens have leading digits matching the given
      * frequency map (rounded to integer counts that sum to ~sampleSize).

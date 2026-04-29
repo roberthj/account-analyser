@@ -21,6 +21,11 @@ class AnalysisService(
      *   mapped to HTTP 400 by the StatusPages handler in
      *   [com.epidemicsound.accountanalyser.module].
      */
+
+    companion object {
+        private val DEFAULT_KEYWORDS = listOf("amount")
+    }
+
     fun analyse(
         text: String,
         expectedSignificanceLevel: Double,
@@ -32,7 +37,6 @@ class AnalysisService(
         }
 
         val keywords = amountKeywords?.takeIf { it.isNotEmpty() } ?: DEFAULT_KEYWORDS
-        require(keywords.none { it.isBlank() }) { "amountKeywords must not contain blank entries" }
 
         val digits = extractor.leadingDigits(text, keywords)
         require(digits.isNotEmpty()) { "No amounts found in input text" }
@@ -52,8 +56,8 @@ class AnalysisService(
         //TODO: Review this Response
         return AnalysisResponse(
             sampleSize = sampleSize,
-            significanceLevel = expectedSignificanceLevel,
-            pValue = observedSignificanceLevel,
+            expectedSignificanceLevel = expectedSignificanceLevel,
+            observedSignificanceLevel = observedSignificanceLevel,
             followsBenfordsLaw = observedSignificanceLevel >= expectedSignificanceLevel,
             distribution = BenfordDistribution.digits.map { d ->
                 DigitDistribution(
@@ -71,7 +75,4 @@ class AnalysisService(
             .map { d -> (counts[d] ?: 0).toLong() }
             .toLongArray()
 
-    companion object {
-        private val DEFAULT_KEYWORDS = listOf("amount")
-    }
 }

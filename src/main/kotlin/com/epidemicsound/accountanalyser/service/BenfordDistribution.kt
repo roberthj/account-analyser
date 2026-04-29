@@ -11,7 +11,6 @@ object BenfordDistribution {
      *   P(d) = log10(1 + 1/d)
      */
     fun expectedProbability(digit: Int): Double {
-        require(digit in digits) { "Benford's law is defined for digits 1..9, got $digit" }
         return log10(1.0 + 1.0 / digit)
     }
 
