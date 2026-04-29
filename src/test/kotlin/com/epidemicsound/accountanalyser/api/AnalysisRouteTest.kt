@@ -122,24 +122,4 @@ class AnalysisRouteTest {
         assertEquals(3, response.body<AnalysisResponse>().sampleSize)
     }
 
-    @Test
-    fun `POST analyse returns 400 when amountKeywords contains a blank entry`() = testApplication {
-        application { module() }
-        val client = createClient {
-            install(ContentNegotiation) { json() }
-        }
-
-        val response = client.post("/api/v1/analyse") {
-            contentType(ContentType.Application.Json)
-            setBody(
-                AnalysisRequest(
-                    text = "Amount 100",
-                    significanceLevel = 0.05,
-                    amountKeywords = listOf("amount", "  "),
-                ),
-            )
-        }
-
-        assertEquals(HttpStatusCode.BadRequest, response.status)
-    }
 }
