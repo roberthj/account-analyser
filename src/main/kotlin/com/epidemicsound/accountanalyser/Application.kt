@@ -1,6 +1,7 @@
 package com.epidemicsound.accountanalyser
 
 import com.epidemicsound.accountanalyser.api.analysisRoutes
+import com.epidemicsound.accountanalyser.service.AnalysisService
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -23,5 +24,7 @@ fun Application.module() {
             call.respond(HttpStatusCode.BadRequest, mapOf("error" to (cause.message ?: "Bad request")))
         }
     }
-    analysisRoutes()
+
+    val analysisService = AnalysisService()
+    analysisRoutes(analysisService)
 }
