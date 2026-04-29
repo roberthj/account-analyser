@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 data class AnalysisRequest(
     val text: String,
     val significanceLevel: Double,
+    /** Keywords that label the amounts to extract. Null/empty falls back to a default. */
+    val amountKeywords: List<String>? = null,
 )
 
 @Serializable

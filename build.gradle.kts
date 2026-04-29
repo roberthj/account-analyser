@@ -3,7 +3,6 @@ val kotlinVersion = "2.1.0"
 val logbackVersion = "1.5.12"
 val commonsMathVersion = "3.6.1"
 val junitVersion = "5.11.4"
-val kotestVersion = "5.9.1"
 
 plugins {
     kotlin("jvm") version "2.1.0"
@@ -40,9 +39,9 @@ dependencies {
     // Testing
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 kotlin {

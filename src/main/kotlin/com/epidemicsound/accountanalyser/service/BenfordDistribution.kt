@@ -1,4 +1,4 @@
-package com.epidemicsound.accountanalyser.domain
+package com.epidemicsound.accountanalyser.service
 
 import kotlin.math.log10
 

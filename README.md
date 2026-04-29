@@ -38,11 +38,26 @@ src/main/kotlin/com/epidemicsound/accountanalyser
 ├── api/
 │   ├── AnalysisRoute.kt        # POST /api/v1/analyse
 │   └── Dto.kt                  # Request/response models
-└── domain/
-    ├── NumberExtractor.kt      # text -> leading digits           [TODO]
-    ├── BenfordDistribution.kt  # expected probabilities (done)
-    └── BenfordAnalyser.kt      # orchestrates the check           [TODO]
+└── service/
+    ├── NumberExtractor.kt      # text -> leading digits of amounts
+    ├── BenfordDistribution.kt  # expected probabilities
+    └── BenfordAnalyser.kt      # orchestrates extract + chi-square
 ```
+
+## Assumption on input format
+
+The input string is treated as a flattened financial document where the values
+to analyse are marked by an `Amount` keyword (case-insensitive, optional `:`,
+optional `$`). For example:
+
+```
+Invoice 123 Account 456 Amount 1000.00 Notes paid... Amount: $250.50
+```
+
+Unlabelled numbers (invoice IDs, account IDs, freetext digits) are intentionally
+ignored — they are typically sequential or arbitrary and would dilute the
+Benford signal. To support a different document format, swap the regex in
+`NumberExtractor`.
 
 ## Running
 
@@ -63,10 +78,9 @@ the first import.
 ./gradlew test
 ```
 
-## What's left to implement
+## Decision rule
 
-The TODOs are concentrated in two files:
-1. `domain/NumberExtractor.kt` — parse numbers out of the input text.
-2. `domain/BenfordAnalyser.kt` — wire the extractor + distribution + chi-square test.
-
-Tests are stubbed out and ready to flesh out alongside the implementations.
+Given a chi-square p-value and a chosen significance level α, the API reports
+`followsBenfordsLaw = (pValue >= α)` — i.e. we *fail to reject* the null
+hypothesis that the leading digits follow Benford's law. Lower α ⇒ stricter
+test ⇒ harder to reject.
