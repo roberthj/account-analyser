@@ -6,12 +6,10 @@ package com.epidemicsound.accountanalyser.service
  *
  * The caller supplies the keyword(s) that label the amounts — e.g.
  * `["amount"]` matches "Amount 1000.00", `["amount", "total"]` also matches
- * "Total: $250". Keywords are matched case-insensitively and are regex-escaped
- * before assembly so caller input cannot inject regex syntax.
+ * "Total: $250". Keywords are matched case-insensitively
  *
  * Unlabelled numbers (invoice IDs, account IDs, free-text digits) are
- * intentionally ignored — they are typically sequential or arbitrary and would
- * pollute the Benford analysis.
+ * ignored
  */
 class NumberExtractor {
 
@@ -29,3 +27,6 @@ class NumberExtractor {
     private fun leadingDigit(amount: String): Int? =
         amount.firstOrNull { it in '1'..'9' }?.digitToInt()
 }
+
+//TODO: Add fallback for more unstructured input
+// For example numbers with $100, €100, 100.00, , sum, tot, etc to filter out irrelevant numbers

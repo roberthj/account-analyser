@@ -1,8 +1,23 @@
 # account-analyser
 
-A Ktor REST service that checks whether the numbers in a free-form text follow
+A Ktor REST service that checks whether the amounts in a text document follow
 [Benford's law](https://en.wikipedia.org/wiki/Benford%27s_law), using a chi-square
-goodness-of-fit test.
+
+## Running
+
+You'll need Gradle. Either:
+
+```bash
+brew install gradle
+gradle wrapper          # generates ./gradlew
+./gradlew run
+```
+
+…or just open the project in IntelliJ — it'll generate the wrapper for you on
+the first import.
+
+There is a Makefile with commands for running, testing and trying out the service
+
 
 ## API
 
@@ -47,36 +62,20 @@ src/main/kotlin/com/epidemicsound/accountanalyser
 ## Assumption on input format
 
 The input string is treated as a flattened financial document where the values
-to analyse are marked by an `Amount` keyword (case-insensitive, optional `:`,
-optional `$`). For example:
+to analyse are marked by an `Amount` keyword or similar. Since it comes from another system we can assume some consistency in the data.
+For example:
 
 ```
 Invoice 123 Account 456 Amount 1000.00 Notes paid... Amount: $250.50
 ```
 
+Amount labels can be provided in the api call.
+
 Unlabelled numbers (invoice IDs, account IDs, freetext digits) are intentionally
-ignored — they are typically sequential or arbitrary and would dilute the
-Benford signal. To support a different document format, swap the regex in
-`NumberExtractor`.
+ignored — they are typically sequential or arbitrary and break the analysis.
 
-## Running
-
-You'll need Gradle. Either:
-
-```bash
-brew install gradle
-gradle wrapper          # generates ./gradlew
-./gradlew run
-```
-
-…or just open the project in IntelliJ — it'll generate the wrapper for you on
-the first import.
-
-## Tests
-
-```bash
-./gradlew test
-```
+Future improvement: Add fallback for more unstructured input.
+For example numbers with $100, €100, 100.00, sum, tot, etc. to filter out irrelevant numbers
 
 ## Decision rule
 

@@ -8,13 +8,12 @@ import org.junit.jupiter.api.Test
 
 class AnalysisServiceTest {
 
-    //TODO: Clean up tests
     private val analysisService = AnalysisService()
     private val significanceLevel = 0.05
 
     @Test
     fun `accepts a sample whose digit frequencies match Benford`() {
-        val text = textWithLeadingDigitFrequencies(
+        val text = generateText(
             sampleSize = 1000,
             frequencies = BenfordDistribution.expectedProbabilities,
         )
@@ -27,8 +26,8 @@ class AnalysisServiceTest {
 
     @Test
     fun `rejects a sample with uniformly distributed leading digits`() {
-        val uniform = BenfordDistribution.digits.associateWith { 1.0 / 9.0 }
-        val text = textWithLeadingDigitFrequencies(sampleSize = 900, frequencies = uniform)
+        val sameProbability = (1..9).associateWith { 1.0 / 9.0 }
+        val text = generateText(sampleSize = 900, frequencies = sameProbability)
 
         val result = analysisService.analyse(text, significanceLevel)
 
@@ -37,7 +36,7 @@ class AnalysisServiceTest {
 
     @Test
     fun `response distribution is ordered 1 through 9 and frequencies sum to 1`() {
-        val text = textWithLeadingDigitFrequencies(
+        val text = generateText(
             sampleSize = 200,
             frequencies = BenfordDistribution.expectedProbabilities,
         )
@@ -57,7 +56,7 @@ class AnalysisServiceTest {
 
     @Test
     fun `respects caller-supplied keywords`() {
-        val text = "Total 100 Total 200 Total 300"
+        val text = "Total 100 Total 200 Total 300 Other 200"
         val result = analysisService.analyse(text, significanceLevel, amountKeywords = listOf("total"))
         assertEquals(3, result.sampleSize)
     }
@@ -77,15 +76,20 @@ class AnalysisServiceTest {
      * Builds a text whose `Amount` tokens have leading digits matching the given
      * frequency map (rounded to integer counts that sum to ~sampleSize).
      */
-    private fun textWithLeadingDigitFrequencies(
+    private fun generateText(
         sampleSize: Int,
-        frequencies: Map<Int, Double>,
-    ): String = buildString {
-        for ((digit, probability) in frequencies) {
+        frequencies: Map<Int, Double>
+    ): String {
+        val digits = mutableListOf<Int>()
+
+        frequencies.forEach { (digit, probability) ->
             val count = (probability * sampleSize).toInt()
+
             repeat(count) {
-                append("Amount ").append(digit).append("00 ")
+                digits.add(digit)
             }
         }
+
+        return digits.joinToString(" ") { "Amount ${it}00" }
     }
 }
