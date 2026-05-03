@@ -3,6 +3,22 @@
 A Ktor REST service that checks whether the amounts in a text document follow
 [Benford's law](https://en.wikipedia.org/wiki/Benford%27s_law), using a chi-square
 
+## Running
+
+You'll need Gradle. Either:
+
+```bash
+brew install gradle
+gradle wrapper          # generates ./gradlew
+./gradlew run
+```
+
+…or just open the project in IntelliJ — it'll generate the wrapper for you on
+the first import.
+
+There is a Makefile with commands for running, testing and trying out the service
+
+
 ## API
 
 `POST /api/v1/analyse`
@@ -60,25 +76,6 @@ ignored — they are typically sequential or arbitrary and break the analysis.
 
 Future improvement: Add fallback for more unstructured input.
 For example numbers with $100, €100, 100.00, sum, tot, etc. to filter out irrelevant numbers
-
-## Running
-
-You'll need Gradle. Either:
-
-```bash
-brew install gradle
-gradle wrapper          # generates ./gradlew
-./gradlew run
-```
-
-…or just open the project in IntelliJ — it'll generate the wrapper for you on
-the first import.
-
-## Tests
-
-```bash
-./gradlew test
-```
 
 ## Decision rule
 
