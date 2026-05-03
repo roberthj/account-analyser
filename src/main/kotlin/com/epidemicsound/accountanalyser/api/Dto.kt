@@ -20,7 +20,7 @@ data class DigitDistribution(
 @Serializable
 data class AnalysisResponse(
     val sampleSize: Int,
-    val expectedSignificanceLevel: Double,
+    val pValue: Double,
     val observedSignificanceLevel: Double,
     val followsBenfordsLaw: Boolean,
     val distribution: List<DigitDistribution>,

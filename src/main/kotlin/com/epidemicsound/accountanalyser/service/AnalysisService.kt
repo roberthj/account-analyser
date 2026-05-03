@@ -13,13 +13,9 @@ class AnalysisService(
         private val DEFAULT_KEYWORDS = listOf("amount")
     }
 
-    /**
-     * Run a Benford's-law check on `text` at the given significance level.
-     *
-     * `amountKeywords` selects which labelled values to extract — null or an
-     * empty list falls back to [DEFAULT_KEYWORDS]. (Future work: when keywords
-     * are absent, fall back to extracting all numbers.)
-     */
+    //`amountKeywords` selects which labelled values to extract — null or an
+    //Future work: when keywords are absent, fall back to extracting all numbers.)
+
     fun analyse(
         text: String,
         expectedSignificanceLevel: Double,
@@ -43,14 +39,13 @@ class AnalysisService(
             .map { d -> BenfordDistribution.expectedProbability(d) * sampleSize }
             .toDoubleArray()
 
-        val observedSignificanceLevel = chiSquareTest.chiSquareTest(expected, toCountArray(observedCounts))
+        val pValue = chiSquareTest.chiSquareTest(expected, toCountArray(observedCounts))
 
-        //TODO: Review this Response
         return AnalysisResponse(
             sampleSize = sampleSize,
-            expectedSignificanceLevel = expectedSignificanceLevel,
-            observedSignificanceLevel = observedSignificanceLevel,
-            followsBenfordsLaw = observedSignificanceLevel >= expectedSignificanceLevel,
+            pValue = expectedSignificanceLevel,
+            observedSignificanceLevel = pValue,
+            followsBenfordsLaw = pValue >= expectedSignificanceLevel,
             distribution = BenfordDistribution.digits.map { d ->
                 DigitDistribution(
                     digit = d,

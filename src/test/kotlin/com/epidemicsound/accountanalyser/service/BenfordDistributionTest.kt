@@ -13,6 +13,6 @@ class BenfordDistributionTest {
     @Test
     fun `expected probabilities sum to 1`() {
         val total = BenfordDistribution.expectedProbabilities.values.sum()
-        assertEquals(1.0, total, 1e-9)
+        assertEquals(1.0, total, 1e-9) //Allow for small error margin because it is float
     }
 }
