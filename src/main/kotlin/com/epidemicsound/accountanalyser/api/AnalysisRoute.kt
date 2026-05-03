@@ -12,12 +12,7 @@ fun Application.analysisRoutes(
 ) {
     routing {
         post("/api/v1/analyse") {
-            val request = try {
-                call.receive<AnalysisRequest>()
-            } catch (e: Exception) {
-                println("EXCEPTION TYPE: ${e::class}")
-                throw e
-            }
+            val request = call.receive<AnalysisRequest>()
             val result = analysisService.analyse(request.text, request.significanceLevel, request.amountKeywords)
             call.respond(result)
         }
