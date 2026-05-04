@@ -27,7 +27,8 @@ Request:
 ```json
 {
   "text": "invoice 123 for 45.67 ...",
-  "significanceLevel": 0.05
+  "significanceLevel": 0.05,
+  "amountKeywords": ["amount","sum","tot"]
 }
 ```
 
